@@ -1,0 +1,35 @@
+{
+  "name": "fond-of-spryker/shipment-split",
+  "description": "Provides the functionality that allows to split shipment costs",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "József Geng",
+      "email": "gengjozsef86@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=7.1",
+    "spryker/shipment": "^6.6.0"
+  },
+  "require-dev": {
+    "spryker/code-sniffer": "^0.11",
+    "spryker/development": "^3.6",
+    "codeception/codeception": "^2.3",
+    "phpro/grumphp": "^0.14",
+    "sebastian/phpcpd": "^4.0"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "FondOfSpryker\\": "src/FondOfSpryker/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "FondOfSpryker\\": "tests/FondOfSpryker/",
+      "Generated\\": "tests/Generated/"
+    }
+  }
+}
