@@ -1,5 +1,5 @@
 {
-  "name": "fond-of-spryker/shipment-split",
+  "name": "fond-of-spryker/shipment-splits-rest-api",
   "description": "Provides the functionality that allows to split shipment costs",
   "license": "MIT",
   "authors": [
