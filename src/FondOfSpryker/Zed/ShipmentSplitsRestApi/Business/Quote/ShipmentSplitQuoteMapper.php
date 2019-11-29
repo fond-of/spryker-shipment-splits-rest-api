@@ -7,7 +7,7 @@ use FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRest
 use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\RestOrderRequestAttributesTransfer;
+use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 use Generated\Shared\Transfer\ShipmentMethodTransfer;
 use Generated\Shared\Transfer\ShipmentTransfer;
 use Spryker\Shared\Shipment\ShipmentConstants;
@@ -28,7 +28,7 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
     }
 
     /**
-     * @param \Generated\Shared\Transfer\RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer
+     * @param \Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\QuoteCollectionTransfer $quoteCollectionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransferSplit
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -36,18 +36,18 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function mapShipmentToQuote(
-        RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer,
+        RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer,
         QuoteCollectionTransfer $quoteCollectionTransfer,
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer {
-        if (!$restOrderRequestAttributesTransfer->getShipment()
-            || !$restOrderRequestAttributesTransfer->getShipment()->getIdShipmentMethod()
+        if (!$restCheckoutRequestAttributesTransfer->getShipment()
+            || !$restCheckoutRequestAttributesTransfer->getShipment()->getIdShipmentMethod()
         ) {
             return $quoteTransferSplit;
         }
 
-        $idShipmentMethod = $restOrderRequestAttributesTransfer->getShipment()->getIdShipmentMethod();
+        $idShipmentMethod = $restCheckoutRequestAttributesTransfer->getShipment()->getIdShipmentMethod();
         $shipmentMethodTransfer = $this->getShipmentMethodTransfer(
             $quoteCollectionTransfer,
             $quoteTransferSplit,

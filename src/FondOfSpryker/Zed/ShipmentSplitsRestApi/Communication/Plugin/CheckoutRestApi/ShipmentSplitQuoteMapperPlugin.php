@@ -2,18 +2,23 @@
 
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Communication\Plugin\CheckoutRestApi;
 
-use FondOfSpryker\Zed\OrderSplitsRestApiExtension\Dependency\Plugin\QuoteMapperPluginInterface;
+use FondOfSpryker\Zed\CheckoutRestApiExtension\Dependency\Plugin\ChildQuoteMapperPluginInterface;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\RestOrderRequestAttributesTransfer;
+use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
  * @method \FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacadeInterface getFacade()
  */
-class ShipmentSplitQuoteMapperPlugin extends AbstractPlugin implements QuoteMapperPluginInterface
+class ShipmentSplitQuoteMapperPlugin extends AbstractPlugin implements ChildQuoteMapperPluginInterface
 {
     /**
+     *
+     * - Maps rest request shipment attribute to quote transfer.
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\QuoteCollectionTransfer $quoteCollectionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransferSplit
@@ -22,13 +27,13 @@ class ShipmentSplitQuoteMapperPlugin extends AbstractPlugin implements QuoteMapp
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function map(
-        RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer,
+        RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer,
         QuoteCollectionTransfer $quoteCollectionTransfer,
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer {
         return $this->getFacade()->mapShipmentToQuote(
-            $restOrderRequestAttributesTransfer,
+            $restCheckoutRequestAttributesTransfer,
             $quoteCollectionTransfer,
             $quoteTransferSplit,
             $quoteTransfer

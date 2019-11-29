@@ -4,12 +4,12 @@ namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote;
 
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
-use Generated\Shared\Transfer\RestOrderRequestAttributesTransfer;
+use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 
 interface ShipmentSplitQuoteMapperInterface
 {
     /**
-     * @param \Generated\Shared\Transfer\RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer
+     * @param \Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\QuoteCollectionTransfer $quoteCollectionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransferSplit
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
@@ -17,7 +17,7 @@ interface ShipmentSplitQuoteMapperInterface
      * @return \Generated\Shared\Transfer\QuoteTransfer
      */
     public function mapShipmentToQuote(
-        RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer,
+        RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer,
         QuoteCollectionTransfer $quoteCollectionTransfer,
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer
