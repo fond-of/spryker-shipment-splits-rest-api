@@ -47,6 +47,7 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
         }
 
         $idShipmentMethod = $restCheckoutRequestAttributesTransfer->getShipment()->getIdShipmentMethod();
+
         $shipmentMethodTransfer = $this->getShipmentMethodTransfer(
             $quoteCollectionTransfer,
             $quoteTransferSplit,
@@ -58,13 +59,14 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
             return $quoteTransferSplit;
         }
 
-        $shipmentTransfer = new ShipmentTransfer();
-        $shipmentTransfer->setMethod($shipmentMethodTransfer)
+        $shipmentTransfer = (new ShipmentTransfer())
+            ->setMethod($shipmentMethodTransfer)
             ->setShipmentSelection((string)$idShipmentMethod);
 
         $quoteTransferSplit->setShipment($shipmentTransfer);
 
         $expenseTransfer = $this->createShippingExpenseTransfer($shipmentMethodTransfer);
+
         $quoteTransferSplit->addExpense($expenseTransfer);
 
         return $quoteTransferSplit;
@@ -77,14 +79,11 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
      */
     protected function createShippingExpenseTransfer(ShipmentMethodTransfer $shipmentMethodTransfer): ExpenseTransfer
     {
-        $shipmentExpenseTransfer = new ExpenseTransfer();
-        $shipmentExpenseTransfer->fromArray($shipmentMethodTransfer->toArray(), true);
-        $shipmentExpenseTransfer->setType(ShipmentConstants::SHIPMENT_EXPENSE_TYPE);
-        $shipmentExpenseTransfer->setUnitNetPrice($shipmentMethodTransfer->getStoreCurrencyPrice());
-        $shipmentExpenseTransfer->setUnitGrossPrice($shipmentMethodTransfer->getStoreCurrencyPrice());
-        $shipmentExpenseTransfer->setQuantity(1);
-
-        return $shipmentExpenseTransfer;
+        return (new ExpenseTransfer())
+            ->fromArray($shipmentMethodTransfer->toArray(), true)
+            ->setType(ShipmentConstants::SHIPMENT_EXPENSE_TYPE)
+            ->setUnitNetPrice($shipmentMethodTransfer->getStoreCurrencyPrice())
+            ->setUnitGrossPrice($shipmentMethodTransfer->getStoreCurrencyPrice())->setQuantity(1);
     }
 
     /**
@@ -101,7 +100,6 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
         QuoteTransfer $quoteTransfer,
         int $idShipmentMethod
     ): ShipmentMethodTransfer {
-
         if ($quoteCollectionTransfer->getQuotes()->offsetGet(0)->getIdQuote() === $quoteTransferSplit->getIdQuote()) {
             return $this->shipmentFacade->findAvailableMethodById($idShipmentMethod, $quoteTransfer);
         }
