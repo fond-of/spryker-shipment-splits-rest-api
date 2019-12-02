@@ -9,7 +9,6 @@ use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 interface ShipmentSplitsRestApiFacadeInterface
 {
     /**
-     *
      * Specification:
      * - Maps rest request shipment to quote.
      * - Finds shipment method by shipmentSelection from request.
@@ -29,5 +28,4 @@ interface ShipmentSplitsRestApiFacadeInterface
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer;
-
 }

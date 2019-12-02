@@ -21,13 +21,15 @@ class ShipmentSplitsRestApiToShipmentFacadeBridge implements ShipmentSplitsRestA
     }
 
     /**
-     * @param $idShipmentMethod
+     * @param int $idShipmentMethod
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
-     * @return \FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentMethodTransfer|null
+     * @return \Generated\Shared\Transfer\ShipmentMethodTransfer|null
      */
-    public function findAvailableMethodById($idShipmentMethod, QuoteTransfer $quoteTransfer): ?ShipmentMethodTransfer
-    {
+    public function findAvailableMethodById(
+        int $idShipmentMethod,
+        QuoteTransfer $quoteTransfer
+    ): ?ShipmentMethodTransfer {
         return $this->shipmentFacade->findAvailableMethodById($idShipmentMethod, $quoteTransfer);
     }
 }

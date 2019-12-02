@@ -8,10 +8,13 @@ use Generated\Shared\Transfer\ShipmentMethodTransfer;
 interface ShipmentSplitsRestApiToShipmentFacadeInterface
 {
     /**
-     * @param $idShipmentMethod
+     * @param int $idShipmentMethod
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      *
      * @return \Generated\Shared\Transfer\ShipmentMethodTransfer|null
      */
-    public function findAvailableMethodById($idShipmentMethod, QuoteTransfer $quoteTransfer): ?ShipmentMethodTransfer;
+    public function findAvailableMethodById(
+        int $idShipmentMethod,
+        QuoteTransfer $quoteTransfer
+    ): ?ShipmentMethodTransfer;
 }

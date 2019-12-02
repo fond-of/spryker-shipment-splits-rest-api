@@ -14,12 +14,11 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 class ShipmentSplitQuoteMapperPlugin extends AbstractPlugin implements ChildQuoteMapperPluginInterface
 {
     /**
-     *
-     * - Maps rest request shipment attribute to quote transfer.
+     * {@inheritdoc}
      *
      * @api
      *
-     * @param \Generated\Shared\Transfer\RestOrderRequestAttributesTransfer $restOrderRequestAttributesTransfer
+     * @param \Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\QuoteCollectionTransfer $quoteCollectionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransferSplit
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer

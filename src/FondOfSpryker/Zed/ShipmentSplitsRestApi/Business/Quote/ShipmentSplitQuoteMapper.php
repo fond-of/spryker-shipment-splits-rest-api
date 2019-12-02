@@ -2,7 +2,6 @@
 
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote;
 
-
 use FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface;
 use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
@@ -107,7 +106,10 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
             return $this->shipmentFacade->findAvailableMethodById($idShipmentMethod, $quoteTransfer);
         }
 
-        $shipmentMethodTransfer = $this->shipmentFacade->findAvailableMethodById($idShipmentMethod, $quoteTransferSplit);
+        $shipmentMethodTransfer = $this->shipmentFacade->findAvailableMethodById(
+            $idShipmentMethod,
+            $quoteTransferSplit
+        );
 
         if ($shipmentMethodTransfer !== null) {
             $shipmentMethodTransfer->setStoreCurrencyPrice(0);
@@ -115,6 +117,4 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
 
         return $shipmentMethodTransfer;
     }
-
 }
-

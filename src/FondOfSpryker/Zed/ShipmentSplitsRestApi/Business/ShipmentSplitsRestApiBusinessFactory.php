@@ -19,11 +19,12 @@ class ShipmentSplitsRestApiBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
+     * @throws
+     *
      * @return \FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface
      */
     public function getShipmentFacade(): ShipmentSplitsRestApiToShipmentFacadeInterface
     {
         return $this->getProvidedDependency(ShipmentSplitsRestApiDependencyProvider::FACADE_SHIPMENT);
     }
-
 }

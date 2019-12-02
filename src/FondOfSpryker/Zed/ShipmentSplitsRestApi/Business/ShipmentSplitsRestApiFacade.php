@@ -13,6 +13,10 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
 class ShipmentSplitsRestApiFacade extends AbstractFacade implements ShipmentSplitsRestApiFacadeInterface
 {
     /**
+     * {@inheritdoc}
+     *
+     * @api
+     *
      * @param \Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer $restCheckoutRequestAttributesTransfer
      * @param \Generated\Shared\Transfer\QuoteCollectionTransfer $quoteCollectionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransferSplit
