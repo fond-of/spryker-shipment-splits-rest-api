@@ -4,6 +4,7 @@ namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade;
 
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\ShipmentMethodTransfer;
+use Spryker\Zed\Shipment\Business\ShipmentFacadeInterface;
 
 class ShipmentSplitsRestApiToShipmentFacadeBridge implements ShipmentSplitsRestApiToShipmentFacadeInterface
 {
@@ -15,7 +16,7 @@ class ShipmentSplitsRestApiToShipmentFacadeBridge implements ShipmentSplitsRestA
     /**
      * @param \Spryker\Zed\Shipment\Business\ShipmentFacadeInterface $shipmentFacade
      */
-    public function __construct($shipmentFacade)
+    public function __construct(ShipmentFacadeInterface $shipmentFacade)
     {
         $this->shipmentFacade = $shipmentFacade;
     }

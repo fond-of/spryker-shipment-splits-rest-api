@@ -31,7 +31,7 @@ class ShipmentSplitsRestApiDependencyProvider extends AbstractBundleDependencyPr
      */
     protected function addShipmentFacade(Container $container): Container
     {
-        $container[static::FACADE_SHIPMENT] = function (Container $container) {
+        $container[static::FACADE_SHIPMENT] = static function (Container $container) {
             return new ShipmentSplitsRestApiToShipmentFacadeBridge(
                 $container->getLocator()->shipment()->facade()
             );
