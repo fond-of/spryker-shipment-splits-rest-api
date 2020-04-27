@@ -92,14 +92,14 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param int $idShipmentMethod
      *
-     * @return \Generated\Shared\Transfer\ShipmentMethodTransfer
+     * @return \Generated\Shared\Transfer\ShipmentMethodTransfer|null
      */
     protected function getShipmentMethodTransfer(
         QuoteCollectionTransfer $quoteCollectionTransfer,
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer,
         int $idShipmentMethod
-    ): ShipmentMethodTransfer {
+    ): ?ShipmentMethodTransfer {
         if ($quoteCollectionTransfer->getQuotes()->offsetGet(0)->getIdQuote() === $quoteTransferSplit->getIdQuote()) {
             return $this->shipmentFacade->findAvailableMethodById($idShipmentMethod, $quoteTransfer);
         }
