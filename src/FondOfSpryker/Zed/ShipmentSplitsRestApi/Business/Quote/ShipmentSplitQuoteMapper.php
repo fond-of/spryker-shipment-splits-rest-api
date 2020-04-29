@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote;
 
+use FondOfSpryker\Shared\ShipmentSplitsRestApi\ShipmentSplitsRestApiConstants;
 use FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface;
 use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
@@ -9,7 +10,6 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 use Generated\Shared\Transfer\ShipmentMethodTransfer;
 use Generated\Shared\Transfer\ShipmentTransfer;
-use Spryker\Shared\Shipment\ShipmentConstants;
 
 class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
 {
@@ -40,7 +40,8 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer {
-        if (!$restCheckoutRequestAttributesTransfer->getShipment()
+        if (
+            !$restCheckoutRequestAttributesTransfer->getShipment()
             || !$restCheckoutRequestAttributesTransfer->getShipment()->getIdShipmentMethod()
         ) {
             return $quoteTransferSplit;
@@ -81,7 +82,7 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
     {
         return (new ExpenseTransfer())
             ->fromArray($shipmentMethodTransfer->toArray(), true)
-            ->setType(ShipmentConstants::SHIPMENT_EXPENSE_TYPE)
+            ->setType(ShipmentSplitsRestApiConstants::SHIPMENT_EXPENSE_TYPE)
             ->setUnitNetPrice($shipmentMethodTransfer->getStoreCurrencyPrice())
             ->setUnitGrossPrice($shipmentMethodTransfer->getStoreCurrencyPrice())->setQuantity(1);
     }

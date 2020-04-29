@@ -1,4 +1,5 @@
-namespace: FondOfSpryker
+namespace: fond-of-spryker/shipment-splits-rest-api
+
 suites:
   unit:
     path: .
