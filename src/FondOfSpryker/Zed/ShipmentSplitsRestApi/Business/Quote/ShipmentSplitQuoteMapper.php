@@ -14,7 +14,7 @@ use Generated\Shared\Transfer\ShipmentTransfer;
 class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
 {
     /**
-     * @var \Spryker\Zed\ShipmentsRestApi\Dependency\Facade\ShipmentsRestApiToShipmentFacadeInterface
+     * @var \FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface
      */
     protected $shipmentFacade;
 
