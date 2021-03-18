@@ -63,13 +63,13 @@ class ShipmentSplitsRestApiToShipmentFacadeBridgeTest extends Unit
      */
     public function testFindAvailableMethodById(): void
     {
-        $this->shipmentFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->shipmentFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findAvailableMethodById')
             ->with($this->idShipmentMethod, $this->quoteTransferMock)
             ->willReturn($this->shipmentMethodTransferMock);
 
-        $this->assertInstanceOf(
-            ShipmentMethodTransfer::class,
+        static::assertEquals(
+            $this->shipmentMethodTransferMock,
             $this->shipmentSplitsRestApiToShipmentFacadeBridge->findAvailableMethodById(
                 $this->idShipmentMethod,
                 $this->quoteTransferMock

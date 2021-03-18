@@ -3,7 +3,7 @@
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Business;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote\ShipmentSplitQuoteMapperInterface;
+use FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote\ShipmentSplitQuoteMapper;
 use FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface;
 use FondOfSpryker\Zed\ShipmentSplitsRestApi\ShipmentSplitsRestApiDependencyProvider;
 use Spryker\Zed\Kernel\Container;
@@ -47,17 +47,17 @@ class ShipmentSplitsRestApiBusinessFactoryTest extends Unit
      */
     public function testCreateShipmentQuoteMapper(): void
     {
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('has')
             ->willReturn(true);
 
-        $this->containerMock->expects($this->atLeastOnce())
+        $this->containerMock->expects(static::atLeastOnce())
             ->method('get')
             ->with(ShipmentSplitsRestApiDependencyProvider::FACADE_SHIPMENT)
             ->willReturn($this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock);
 
-        $this->assertInstanceOf(
-            ShipmentSplitQuoteMapperInterface::class,
+        static::assertInstanceOf(
+            ShipmentSplitQuoteMapper::class,
             $this->shipmentSplitsRestApiBusinessFactory->createShipmentQuoteMapper()
         );
     }
