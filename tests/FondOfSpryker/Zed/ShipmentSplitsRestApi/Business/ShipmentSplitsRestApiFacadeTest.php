@@ -74,11 +74,11 @@ class ShipmentSplitsRestApiFacadeTest extends Unit
      */
     public function testMapShipmentToQuote(): void
     {
-        $this->shipmentSplitsRestApiBusinessFactoryMock->expects($this->atLeastOnce())
+        $this->shipmentSplitsRestApiBusinessFactoryMock->expects(static::atLeastOnce())
             ->method('createShipmentQuoteMapper')
             ->willReturn($this->shipmentSplitQuoteMapperInterfaceMock);
 
-        $this->shipmentSplitQuoteMapperInterfaceMock->expects($this->atLeastOnce())
+        $this->shipmentSplitQuoteMapperInterfaceMock->expects(static::atLeastOnce())
             ->method('mapShipmentToQuote')
             ->with(
                 $this->restCheckoutRequestAttributesTransferMock,
@@ -87,8 +87,8 @@ class ShipmentSplitsRestApiFacadeTest extends Unit
                 $this->quoteTransferMock
             )->willReturn($this->quoteTransferMock);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->shipmentSplitsRestApiFacade->mapShipmentToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteCollectionTransferMock,

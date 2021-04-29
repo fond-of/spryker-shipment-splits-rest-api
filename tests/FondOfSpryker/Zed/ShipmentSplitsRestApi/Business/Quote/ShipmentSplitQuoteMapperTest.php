@@ -2,9 +2,9 @@
 
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote;
 
-use ArrayObject;
 use Codeception\Test\Unit;
 use FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface;
+use Generated\Shared\Transfer\AddressTransfer;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
@@ -34,6 +34,11 @@ class ShipmentSplitQuoteMapperTest extends Unit
     protected $quoteTransferMock;
 
     /**
+     * @var \Generated\Shared\Transfer\QuoteTransfer|\PHPUnit\Framework\MockObject\MockObject
+     */
+    protected $splitQuoteTransferMock;
+
+    /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface
      */
     protected $shipmentSplitsRestApiToShipmentFacadeInterfaceMock;
@@ -44,29 +49,14 @@ class ShipmentSplitQuoteMapperTest extends Unit
     protected $restShipmentTransferMock;
 
     /**
-     * @var int
+     * @var \Generated\Shared\Transfer\AddressTransfer|\PHPUnit\Framework\MockObject\MockObject
      */
-    protected $idShipmentMethod;
-
-    /**
-     * @var \ArrayObject|\Generated\Shared\Transfer\QuoteTransfer[]
-     */
-    protected $quotes;
-
-    /**
-     * @var int
-     */
-    protected $idQuote;
+    protected $addressTransferMock;
 
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|\Generated\Shared\Transfer\ShipmentMethodTransfer
      */
     protected $shipmentMethodTransferMock;
-
-    /**
-     * @var int
-     */
-    protected $storeCurrencyPrice;
 
     /**
      * @return void
@@ -89,23 +79,21 @@ class ShipmentSplitQuoteMapperTest extends Unit
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->splitQuoteTransferMock = $this->getMockBuilder(QuoteTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->restShipmentTransferMock = $this->getMockBuilder(RestShipmentTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->idShipmentMethod = 1;
-
-        $this->quotes = new ArrayObject([
-            $this->quoteTransferMock,
-        ]);
-
-        $this->idQuote = 2;
+        $this->addressTransferMock = $this->getMockBuilder(AddressTransfer::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
         $this->shipmentMethodTransferMock = $this->getMockBuilder(ShipmentMethodTransfer::class)
             ->disableOriginalConstructor()
             ->getMock();
-
-        $this->storeCurrencyPrice = 3;
 
         $this->shipmentSplitQuoteMapper = new ShipmentSplitQuoteMapper(
             $this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock
@@ -117,54 +105,48 @@ class ShipmentSplitQuoteMapperTest extends Unit
      */
     public function testMapShipmentToQuote(): void
     {
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $idShipmentMethod = 3;
+        $storeCurrencyPrice = 3;
+
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getShipment')
             ->willReturn($this->restShipmentTransferMock);
 
-        $this->restShipmentTransferMock->expects($this->atLeastOnce())
+        $this->restShipmentTransferMock->expects(static::atLeastOnce())
             ->method('getIdShipmentMethod')
-            ->willReturn($this->idShipmentMethod);
+            ->willReturn($idShipmentMethod);
 
-        $this->quoteCollectionTransferMock->expects($this->atLeastOnce())
-            ->method('getQuotes')
-            ->willReturn($this->quotes);
+        $this->quoteTransferMock->expects(static::atLeastOnce())
+            ->method('getShippingAddress')
+            ->willReturn($this->addressTransferMock);
 
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('getIdQuote')
-            ->willReturnOnConsecutiveCalls($this->idQuote, 99);
+        $this->splitQuoteTransferMock->expects(static::atLeastOnce())
+            ->method('setShipment')
+            ->willReturn($this->splitQuoteTransferMock);
 
-        $this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findAvailableMethodById')
-            ->with($this->idShipmentMethod, $this->quoteTransferMock)
+            ->with($idShipmentMethod, $this->splitQuoteTransferMock)
             ->willReturn($this->shipmentMethodTransferMock);
 
-        $this->shipmentMethodTransferMock->expects($this->atLeastOnce())
-            ->method('setStoreCurrencyPrice')
-            ->with(0)
-            ->willReturnSelf();
-
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('setShipment')
-            ->willReturnSelf();
-
-        $this->shipmentMethodTransferMock->expects($this->atLeastOnce())
+        $this->shipmentMethodTransferMock->expects(static::atLeastOnce())
             ->method('toArray')
             ->willReturn([]);
 
-        $this->shipmentMethodTransferMock->expects($this->atLeastOnce())
+        $this->shipmentMethodTransferMock->expects(static::atLeastOnce())
             ->method('getStoreCurrencyPrice')
-            ->willReturn($this->storeCurrencyPrice);
+            ->willReturn($storeCurrencyPrice);
 
-        $this->quoteTransferMock->expects($this->atLeastOnce())
+        $this->splitQuoteTransferMock->expects(static::atLeastOnce())
             ->method('addExpense')
             ->willReturnSelf();
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->splitQuoteTransferMock,
             $this->shipmentSplitQuoteMapper->mapShipmentToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteCollectionTransferMock,
-                $this->quoteTransferMock,
+                $this->splitQuoteTransferMock,
                 $this->quoteTransferMock
             )
         );
@@ -175,65 +157,16 @@ class ShipmentSplitQuoteMapperTest extends Unit
      */
     public function testMapShipmentToQuoteNoShipment(): void
     {
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getShipment')
             ->willReturn(null);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->splitQuoteTransferMock,
             $this->shipmentSplitQuoteMapper->mapShipmentToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteCollectionTransferMock,
-                $this->quoteTransferMock,
-                $this->quoteTransferMock
-            )
-        );
-    }
-
-    /**
-     * @return void
-     */
-    public function testMapShipmentToQuoteQuoteIdsMatch(): void
-    {
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
-            ->method('getShipment')
-            ->willReturn($this->restShipmentTransferMock);
-
-        $this->restShipmentTransferMock->expects($this->atLeastOnce())
-            ->method('getIdShipmentMethod')
-            ->willReturn($this->idShipmentMethod);
-
-        $this->quoteCollectionTransferMock->expects($this->atLeastOnce())
-            ->method('getQuotes')
-            ->willReturn($this->quotes);
-
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('getIdQuote')
-            ->willReturn($this->idQuote);
-
-        $this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock->expects($this->atLeastOnce())
-            ->method('findAvailableMethodById')
-            ->with($this->idShipmentMethod, $this->quoteTransferMock)
-            ->willReturn($this->shipmentMethodTransferMock);
-
-        $this->shipmentMethodTransferMock->expects($this->atLeastOnce())
-            ->method('toArray')
-            ->willReturn([]);
-
-        $this->shipmentMethodTransferMock->expects($this->atLeastOnce())
-            ->method('getStoreCurrencyPrice')
-            ->willReturn($this->storeCurrencyPrice);
-
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('addExpense')
-            ->willReturnSelf();
-
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
-            $this->shipmentSplitQuoteMapper->mapShipmentToQuote(
-                $this->restCheckoutRequestAttributesTransferMock,
-                $this->quoteCollectionTransferMock,
-                $this->quoteTransferMock,
+                $this->splitQuoteTransferMock,
                 $this->quoteTransferMock
             )
         );
@@ -244,33 +177,35 @@ class ShipmentSplitQuoteMapperTest extends Unit
      */
     public function testMapShipmentToQuoteShipmentMethodNull(): void
     {
-        $this->restCheckoutRequestAttributesTransferMock->expects($this->atLeastOnce())
+        $idShipmentMethod = 3;
+
+        $this->restCheckoutRequestAttributesTransferMock->expects(static::atLeastOnce())
             ->method('getShipment')
             ->willReturn($this->restShipmentTransferMock);
 
-        $this->restShipmentTransferMock->expects($this->atLeastOnce())
+        $this->restShipmentTransferMock->expects(static::atLeastOnce())
             ->method('getIdShipmentMethod')
-            ->willReturn($this->idShipmentMethod);
+            ->willReturn($idShipmentMethod);
 
-        $this->quoteCollectionTransferMock->expects($this->atLeastOnce())
-            ->method('getQuotes')
-            ->willReturn($this->quotes);
+        $this->quoteTransferMock->expects(static::atLeastOnce())
+            ->method('getShippingAddress')
+            ->willReturn($this->addressTransferMock);
 
-        $this->quoteTransferMock->expects($this->atLeastOnce())
-            ->method('getIdQuote')
-            ->willReturn($this->idQuote);
+        $this->splitQuoteTransferMock->expects(static::atLeastOnce())
+            ->method('setShipment')
+            ->willReturn($this->splitQuoteTransferMock);
 
-        $this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->shipmentSplitsRestApiToShipmentFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('findAvailableMethodById')
-            ->with($this->idShipmentMethod, $this->quoteTransferMock)
+            ->with($idShipmentMethod, $this->splitQuoteTransferMock)
             ->willReturn(null);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->splitQuoteTransferMock,
             $this->shipmentSplitQuoteMapper->mapShipmentToQuote(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteCollectionTransferMock,
-                $this->quoteTransferMock,
+                $this->splitQuoteTransferMock,
                 $this->quoteTransferMock
             )
         );

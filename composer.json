@@ -12,7 +12,7 @@
     "php": ">=7.1",
     "fond-of-spryker/checkout-rest-api-extension": "dev-master",
     "spryker/shipments-rest-api": "^1.0.0",
-    "spryker/shipment": "^6.6.0 || ^7.0.0"
+    "spryker/shipment": "^6.2.0 || ^7.0.0 || ^8.0.0"
   },
   "require-dev": {
     "spryker/code-sniffer": "^0.12",
@@ -20,7 +20,7 @@
     "phpro/grumphp": "^0.14",
     "sebastian/phpcpd": "^4.0",
     "php-coveralls/php-coveralls": "^2.1",
-    "fond-of-codeception/spryker": "dev-master"
+    "fond-of-codeception/spryker": "^1.0"
   },
   "minimum-stability": "dev",
   "prefer-stable": true,

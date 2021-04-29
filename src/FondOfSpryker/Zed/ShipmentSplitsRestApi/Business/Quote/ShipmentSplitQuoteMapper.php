@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\Quote;
 
+use FondOfSpryker\Shared\ShipmentSplitsRestApi\ShipmentSplitsRestApiConstants;
 use FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface;
 use Generated\Shared\Transfer\ExpenseTransfer;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
@@ -9,12 +10,11 @@ use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
 use Generated\Shared\Transfer\ShipmentMethodTransfer;
 use Generated\Shared\Transfer\ShipmentTransfer;
-use Spryker\Shared\Shipment\ShipmentConstants;
 
 class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
 {
     /**
-     * @var \Spryker\Zed\ShipmentsRestApi\Dependency\Facade\ShipmentsRestApiToShipmentFacadeInterface
+     * @var \FondOfSpryker\Zed\ShipmentSplitsRestApi\Dependency\Facade\ShipmentSplitsRestApiToShipmentFacadeInterface
      */
     protected $shipmentFacade;
 
@@ -40,18 +40,20 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
         QuoteTransfer $quoteTransferSplit,
         QuoteTransfer $quoteTransfer
     ): QuoteTransfer {
-        if (!$restCheckoutRequestAttributesTransfer->getShipment()
+        if (
+            !$restCheckoutRequestAttributesTransfer->getShipment()
             || !$restCheckoutRequestAttributesTransfer->getShipment()->getIdShipmentMethod()
         ) {
             return $quoteTransferSplit;
         }
 
+        $shipmentTransfer = (new ShipmentTransfer())
+            ->setShippingAddress($quoteTransfer->getShippingAddress());
+
         $idShipmentMethod = $restCheckoutRequestAttributesTransfer->getShipment()->getIdShipmentMethod();
 
         $shipmentMethodTransfer = $this->getShipmentMethodTransfer(
-            $quoteCollectionTransfer,
-            $quoteTransferSplit,
-            $quoteTransfer,
+            $quoteTransferSplit->setShipment($shipmentTransfer),
             $idShipmentMethod
         );
 
@@ -59,8 +61,7 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
             return $quoteTransferSplit;
         }
 
-        $shipmentTransfer = (new ShipmentTransfer())
-            ->setMethod($shipmentMethodTransfer)
+        $shipmentTransfer->setMethod($shipmentMethodTransfer)
             ->setShipmentSelection((string)$idShipmentMethod);
 
         $quoteTransferSplit->setShipment($shipmentTransfer);
@@ -81,38 +82,24 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
     {
         return (new ExpenseTransfer())
             ->fromArray($shipmentMethodTransfer->toArray(), true)
-            ->setType(ShipmentConstants::SHIPMENT_EXPENSE_TYPE)
+            ->setType(ShipmentSplitsRestApiConstants::SHIPMENT_EXPENSE_TYPE)
             ->setUnitNetPrice($shipmentMethodTransfer->getStoreCurrencyPrice())
             ->setUnitGrossPrice($shipmentMethodTransfer->getStoreCurrencyPrice())->setQuantity(1);
     }
 
     /**
-     * @param \Generated\Shared\Transfer\QuoteCollectionTransfer $quoteCollectionTransfer
      * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransferSplit
-     * @param \Generated\Shared\Transfer\QuoteTransfer $quoteTransfer
      * @param int $idShipmentMethod
      *
      * @return \Generated\Shared\Transfer\ShipmentMethodTransfer|null
      */
     protected function getShipmentMethodTransfer(
-        QuoteCollectionTransfer $quoteCollectionTransfer,
         QuoteTransfer $quoteTransferSplit,
-        QuoteTransfer $quoteTransfer,
         int $idShipmentMethod
     ): ?ShipmentMethodTransfer {
-        if ($quoteCollectionTransfer->getQuotes()->offsetGet(0)->getIdQuote() === $quoteTransferSplit->getIdQuote()) {
-            return $this->shipmentFacade->findAvailableMethodById($idShipmentMethod, $quoteTransfer);
-        }
-
-        $shipmentMethodTransfer = $this->shipmentFacade->findAvailableMethodById(
+        return $this->shipmentFacade->findAvailableMethodById(
             $idShipmentMethod,
             $quoteTransferSplit
         );
-
-        if ($shipmentMethodTransfer !== null) {
-            $shipmentMethodTransfer->setStoreCurrencyPrice(0);
-        }
-
-        return $shipmentMethodTransfer;
     }
 }

@@ -3,10 +3,11 @@
 namespace FondOfSpryker\Zed\ShipmentSplitsRestApi\Communication\Plugin\CheckoutRestApi;
 
 use Codeception\Test\Unit;
-use FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacadeInterface;
+use FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacade;
 use Generated\Shared\Transfer\QuoteCollectionTransfer;
 use Generated\Shared\Transfer\QuoteTransfer;
 use Generated\Shared\Transfer\RestCheckoutRequestAttributesTransfer;
+use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 class ShipmentSplitQuoteMapperPluginTest extends Unit
 {
@@ -40,7 +41,7 @@ class ShipmentSplitQuoteMapperPluginTest extends Unit
      */
     protected function _before(): void
     {
-        $this->shipmentSplitsRestApiFacadeInterfaceMock = $this->getMockBuilder(ShipmentSplitsRestApiFacadeInterface::class)
+        $this->shipmentSplitsRestApiFacadeInterfaceMock = $this->getMockBuilder(ShipmentSplitsRestApiFacade::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -60,22 +61,22 @@ class ShipmentSplitQuoteMapperPluginTest extends Unit
             $this->shipmentSplitsRestApiFacadeInterfaceMock
         ) extends ShipmentSplitQuoteMapperPlugin {
             /**
-             * @var \FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacadeInterface
+             * @var \FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacade
              */
             protected $shipmentSplitsRestApiFacade;
 
             /**
-             * @param \FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacadeInterface $shipmentSplitsRestApiFacade
+             * @param \FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacade $shipmentSplitsRestApiFacade
              */
-            public function __construct(ShipmentSplitsRestApiFacadeInterface $shipmentSplitsRestApiFacade)
+            public function __construct(ShipmentSplitsRestApiFacade $shipmentSplitsRestApiFacade)
             {
                 $this->shipmentSplitsRestApiFacade = $shipmentSplitsRestApiFacade;
             }
 
             /**
-             * @return \FondOfSpryker\Zed\ShipmentSplitsRestApi\Business\ShipmentSplitsRestApiFacadeInterface
+             * @return \Spryker\Zed\Kernel\Business\AbstractFacade
              */
-            public function getFacade(): ShipmentSplitsRestApiFacadeInterface
+            protected function getFacade(): AbstractFacade
             {
                 return $this->shipmentSplitsRestApiFacade;
             }
@@ -87,7 +88,7 @@ class ShipmentSplitQuoteMapperPluginTest extends Unit
      */
     public function testMap(): void
     {
-        $this->shipmentSplitsRestApiFacadeInterfaceMock->expects($this->atLeastOnce())
+        $this->shipmentSplitsRestApiFacadeInterfaceMock->expects(static::atLeastOnce())
             ->method('mapShipmentToQuote')
             ->with(
                 $this->restCheckoutRequestAttributesTransferMock,
@@ -96,8 +97,8 @@ class ShipmentSplitQuoteMapperPluginTest extends Unit
                 $this->quoteTransferMock
             )->willReturn($this->quoteTransferMock);
 
-        $this->assertInstanceOf(
-            QuoteTransfer::class,
+        static::assertEquals(
+            $this->quoteTransferMock,
             $this->shipmentSplitQuoteMapperPlugin->map(
                 $this->restCheckoutRequestAttributesTransferMock,
                 $this->quoteCollectionTransferMock,

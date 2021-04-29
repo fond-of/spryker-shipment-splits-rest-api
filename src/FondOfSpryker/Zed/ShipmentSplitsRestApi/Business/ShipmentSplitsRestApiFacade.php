@@ -13,7 +13,7 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
 class ShipmentSplitsRestApiFacade extends AbstractFacade implements ShipmentSplitsRestApiFacadeInterface
 {
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      *
      * @api
      *

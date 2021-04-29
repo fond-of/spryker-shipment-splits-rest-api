@@ -34,8 +34,8 @@ class ShipmentSplitsRestApiDependencyProviderTest extends Unit
      */
     public function testProvideBusinessLayerDependencies(): void
     {
-        $this->assertInstanceOf(
-            Container::class,
+        static::assertEquals(
+            $this->containerMock,
             $this->shipmentSplitsRestApiDependencyProvider->provideBusinessLayerDependencies(
                 $this->containerMock
             )
