@@ -66,7 +66,7 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
 
         $quoteTransferSplit->setShipment($shipmentTransfer);
 
-        $expenseTransfer = $this->createShippingExpenseTransfer($shipmentMethodTransfer);
+        $expenseTransfer = $this->createShippingExpenseTransfer($shipmentMethodTransfer, $shipmentTransfer);
 
         $quoteTransferSplit->addExpense($expenseTransfer);
 
@@ -75,16 +75,21 @@ class ShipmentSplitQuoteMapper implements ShipmentSplitQuoteMapperInterface
 
     /**
      * @param \Generated\Shared\Transfer\ShipmentMethodTransfer $shipmentMethodTransfer
+     * @param \Generated\Shared\Transfer\ShipmentTransfer $shipmentTransfer
      *
      * @return \Generated\Shared\Transfer\ExpenseTransfer
      */
-    protected function createShippingExpenseTransfer(ShipmentMethodTransfer $shipmentMethodTransfer): ExpenseTransfer
-    {
+    protected function createShippingExpenseTransfer(
+        ShipmentMethodTransfer $shipmentMethodTransfer,
+        ShipmentTransfer $shipmentTransfer
+    ): ExpenseTransfer {
         return (new ExpenseTransfer())
             ->fromArray($shipmentMethodTransfer->toArray(), true)
             ->setType(ShipmentSplitsRestApiConstants::SHIPMENT_EXPENSE_TYPE)
             ->setUnitNetPrice($shipmentMethodTransfer->getStoreCurrencyPrice())
-            ->setUnitGrossPrice($shipmentMethodTransfer->getStoreCurrencyPrice())->setQuantity(1);
+            ->setUnitGrossPrice($shipmentMethodTransfer->getStoreCurrencyPrice())
+            ->setQuantity(1)
+            ->setShipment($shipmentTransfer);
     }
 
     /**
